@@ -23,14 +23,10 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-var trackData = new trackParser("%B1234123412341234^CardUser/John^030510100000019301000000877000000?;1234123412341234=0305101193010877?");
-if ( trackData.hasTrack1 ){
-    console.log( trackData.lastName, trackData.firstName, trackData.account, trackData.expMonth + "/" + trackData.expYear)
-}
 
 
 
-function trackParser(strParse) {
+let trackParser = function(strParse) {
 
     // we error check
     if (strParse == "" || strParse == null || strParse == undefined){
@@ -45,7 +41,7 @@ function trackParser(strParse) {
     this.firstName              = null;
     this.acccount               = null;
     this.expMonth              = null;
-    this.expYear               = null;
+    this.expYear               = null;gi
     this.track1                 = null;
     this.track2                 = null;
     this.hasTrack1              = false;
@@ -256,3 +252,5 @@ function trackParser(strParse) {
     }
 
 }
+
+module.exports = trackParser
