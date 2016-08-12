@@ -23,16 +23,10 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 (function ParseParserObj() {
-    var p = new SwipeParserObj();
-    if( p.hasTrack1 ){
-        p.account_name;
-        p.surname;
-        p.firstname;
-        p.account;
-        p.exp_month + "/" + p.exp_year;
+    var trackData = new trackParser();
+    if( trackData.hasTrack1 ){
+        console.log( trackData.surname, trackData.firstname, trackData.account, trackData.exp_month + "/" + trackData.exp_year)
     }
-
-    console.log("account_name: " + p.account_name + "\nsurname: " + p.surname + "\nfirstname: " + p.firstname + "\naccount: " + p.account+ "\nexpiration: " + p.exp_month + "/" + p.exp_year);
 })()
 
 
@@ -41,6 +35,12 @@
 
 
 function trackParser(strParse) {
+
+    // we error check
+    if (strParse == "" || strParse == null || strParse == undefined){
+        console.log("There was no data passed to the constructor")
+        return
+    }
 
     ///////////////////// member variables ////////////////////////
     this.input_trackdata_str    = strParse;
@@ -59,19 +59,19 @@ function trackParser(strParse) {
 
     sTrackData = this.input_trackdata_str;     //--- Get the track data
 
-  //-- Example: Track 1 & 2 Data
-  //-- %B1234123412341234^CardUser/John^030510100000019301000000877000000?;1234123412341234=0305101193010877?
-  //-- Key off of the presence of "^" and "="
+    //-- Example: Track 1 & 2 Data
+    //-- %B1234123412341234^CardUser/John^030510100000019301000000877000000?;1234123412341234=0305101193010877?
+    //-- Key off of the presence of "^" and "="
 
-  //-- Example: Track 1 Data Only
-  //-- B1234123412341234^CardUser/John^030510100000019301000000877000000?
-  //-- Key off of the presence of "^" but not "="
+    //-- Example: Track 1 Data Only
+    //-- B1234123412341234^CardUser/John^030510100000019301000000877000000?
+    //-- Key off of the presence of "^" but not "="
 
-  //-- Example: Track 2 Data Only
-  //-- 1234123412341234=0305101193010877?
-  //-- Key off of the presence of "=" but not "^"
+    //-- Example: Track 2 Data Only
+    //-- 1234123412341234=0305101193010877?
+    //-- Key off of the presence of "=" but not "^"
 
-  if ( strParse != '' ) {
+    if ( strParse != '' ) {
     // alert(strParse);
 
     //--- Determine the presence of special characters
@@ -108,140 +108,130 @@ function trackParser(strParse) {
     //--- Track 1 & 2 cards
     //--- Ex: B1234123412341234^CardUser/John^030510100000019301000000877000000?;1234123412341234=0305101193010877?
     //-----------------------------------------------------------------------------
-    if (bTrack1_2)
-    {
-//      alert('Track 1 & 2 swipe');
+    if (bTrack1_2) {
+        console.log('Track 1 & 2 swipe');
 
-      strCutUpSwipe = '' + strParse + ' ';
-      arrayStrSwipe = new Array(4);
-      arrayStrSwipe = strCutUpSwipe.split("^");
+        strCutUpSwipe = '' + strParse + ' ';
+        arrayStrSwipe = new Array(4);
+        arrayStrSwipe = strCutUpSwipe.split("^");
 
-      var sAccountNumber, sName, sShipToName, sMonth, sYear;
+        var sAccountNumber, sName, sShipToName, sMonth, sYear;
 
-      if ( arrayStrSwipe.length > 2 )
-      {
-        this.account = stripAlpha( arrayStrSwipe[0].substring(1,arrayStrSwipe[0].length) );
-        this.account_name          = arrayStrSwipe[1];
-        this.exp_month         = arrayStrSwipe[2].substring(2,4);
-        this.exp_year          = '20' + arrayStrSwipe[2].substring(0,2);
+        if ( arrayStrSwipe.length > 2 ) {
+            this.account        = stripAlpha( arrayStrSwipe[0].substring(1,arrayStrSwipe[0].length) );
+            this.account_name   = arrayStrSwipe[1];
+            this.exp_month      = arrayStrSwipe[2].substring(2,4);
+            this.exp_year       = '20' + arrayStrSwipe[2].substring(0,2);
 
-        //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there, there are
-        //---   problems with parsing on the part of credit cards processor - so strip it off
-        if ( sTrackData.substring(0,1) == '%' ) {
-            sTrackData = sTrackData.substring(1,sTrackData.length);
-        }
+            //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there, there are
+            //---   problems with parsing on the part of credit cards processor - so strip it off
+            if ( sTrackData.substring(0,1) == '%' ) {
+                sTrackData = sTrackData.substring(1,sTrackData.length);
+            }
 
-           var track2sentinel = sTrackData.indexOf(";");
-           if( track2sentinel != -1 ){
+            var track2sentinel = sTrackData.indexOf(";");
+            if( track2sentinel != -1 ){
                this.track1 = sTrackData.substring(0, track2sentinel);
                this.track2 = sTrackData.substring(track2sentinel);
-           }
-
-        //--- parse name field into first/last names
-        var nameDelim = this.account_name.indexOf("/");
-        if( nameDelim != -1 ){
-            this.surname = this.account_name.substring(0, nameDelim);
-            this.firstname = this.account_name.substring(nameDelim+1);
+            }
+            //--- parse name field into first/last names
+            var nameDelim = this.account_name.indexOf("/");
+            if( nameDelim != -1 ){
+                this.surname = this.account_name.substring(0, nameDelim);
+                this.firstname = this.account_name.substring(nameDelim+1);
+            }
         }
-      }
-      else  //--- for "if ( arrayStrSwipe.length > 2 )"
-      {
+        else { //--- for "if ( arrayStrSwipe.length > 2 )"
         bShowAlert = true;  //--- Error -- show alert message
-      }
+        }
     }
 
     //-----------------------------------------------------------------------------
     //--- Track 1 only cards
     //--- Ex: B1234123412341234^CardUser/John^030510100000019301000000877000000?
     //-----------------------------------------------------------------------------
-    if (bTrack1)
-    {
-//      alert('Track 1 swipe');
+    if (bTrack1) {
+        console.log('Track 1 swipe');
 
-      strCutUpSwipe = '' + strParse + ' ';
-      arrayStrSwipe = new Array(4);
-      arrayStrSwipe = strCutUpSwipe.split("^");
+        strCutUpSwipe = '' + strParse + ' ';
+        arrayStrSwipe = new Array(4);
+        arrayStrSwipe = strCutUpSwipe.split("^");
 
-      var sAccountNumber, sName, sShipToName, sMonth, sYear;
+        var sAccountNumber, sName, sShipToName, sMonth, sYear;
 
-      if ( arrayStrSwipe.length > 2 )
-      {
-        this.account = sAccountNumber = stripAlpha( arrayStrSwipe[0].substring( 1,arrayStrSwipe[0].length) );
-        this.account_name = sName    = arrayStrSwipe[1];
-        this.exp_month = sMonth    = arrayStrSwipe[2].substring(2,4);
-        this.exp_year = sYear    = '20' + arrayStrSwipe[2].substring(0,2);
+        if ( arrayStrSwipe.length > 2 ) {
+
+            this.account        = sAccountNumber    = stripAlpha( arrayStrSwipe[0].substring( 1,arrayStrSwipe[0].length) );
+            this.account_name   = sName             = arrayStrSwipe[1];
+            this.exp_month      = sMonth            = arrayStrSwipe[2].substring(2,4);
+            this.exp_year       = sYear             = '20' + arrayStrSwipe[2].substring(0,2);
 
 
-        //--- Different card swipe readers include or exclude the % in
-        //--- the front of the track data - when it's there, there are
-        //---   problems with parsing on the part of credit cards processor - so strip it off
-        if ( sTrackData.substring(0,1) == '%' ) {
-            this.track1 = sTrackData = sTrackData.substring(1,sTrackData.length);
+            //--- Different card swipe readers include or exclude the % in
+            //--- the front of the track data - when it's there, there are
+            //---   problems with parsing on the part of credit cards processor - so strip it off
+            if ( sTrackData.substring(0,1) == '%' ) {
+                this.track1 = sTrackData = sTrackData.substring(1,sTrackData.length);
+            }
+
+            //--- Add track 2 data to the string for processing reasons
+            //        if (sTrackData.substring(sTrackData.length-1,1) != '?')  //--- Add a ? if not present
+            //        { sTrackData = sTrackData + '?'; }
+            this.track2 = ';' + sAccountNumber + '=' + sYear.substring(2,4) + sMonth + '111111111111?';
+            sTrackData = sTrackData + this.track2;
+
+            //--- parse name field into first/last names
+            var nameDelim = this.account_name.indexOf("/");
+            if( nameDelim != -1 ){
+                this.surname = this.account_name.substring(0, nameDelim);
+                this.firstname = this.account_name.substring(nameDelim+1);
+            }
+
         }
-
-        //--- Add track 2 data to the string for processing reasons
-//        if (sTrackData.substring(sTrackData.length-1,1) != '?')  //--- Add a ? if not present
-//        { sTrackData = sTrackData + '?'; }
-        this.track2 = ';' + sAccountNumber + '=' + sYear.substring(2,4) + sMonth + '111111111111?';
-        sTrackData = sTrackData + this.track2;
-
-        //--- parse name field into first/last names
-        var nameDelim = this.account_name.indexOf("/");
-        if( nameDelim != -1 ){
-            this.surname = this.account_name.substring(0, nameDelim);
-            this.firstname = this.account_name.substring(nameDelim+1);
+        else { //--- for "if ( arrayStrSwipe.length > 2 )"
+            bShowAlert = true;  //--- Error -- show alert message
         }
-
-      }
-      else  //--- for "if ( arrayStrSwipe.length > 2 )"
-      {
-        bShowAlert = true;  //--- Error -- show alert message
-      }
     }
 
     //-----------------------------------------------------------------------------
     //--- Track 2 only cards
     //--- Ex: 1234123412341234=0305101193010877?
     //-----------------------------------------------------------------------------
-    if (bTrack2)
-    {
-//      alert('Track 2 swipe');
+    if (bTrack2) {
+        console.log('Track 2 swipe');
 
-      nSeperator  = strParse.indexOf("=");
-      sCardNumber = strParse.substring(1,nSeperator);
-      sYear       = strParse.substr(nSeperator+1,2);
-      sMonth      = strParse.substr(nSeperator+3,2);
+        nSeperator  = strParse.indexOf("=");
+        sCardNumber = strParse.substring(1,nSeperator);
+        sYear       = strParse.substr(nSeperator+1,2);
+        sMonth      = strParse.substr(nSeperator+3,2);
 
-      // alert(sCardNumber + ' -- ' + sMonth + '/' + sYear);
+        // console.log(sCardNumber + ' -- ' + sMonth + '/' + sYear);
 
-      this.account = sAccountNumber = stripAlpha(sCardNumber);
-      this.exp_month = sMonth        = sMonth;
-      this.exp_year = sYear            = '20' + sYear;
+        this.account    = sAccountNumber    = stripAlpha(sCardNumber);
+        this.exp_month  = sMonth            = sMonth;
+        this.exp_year   = sYear             = '20' + sYear;
 
-      //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there,
-      //---  there are problems with parsing on the part of credit cards processor - so strip it off
-      if ( sTrackData.substring(0,1) == '%' ) {
-        sTrackData = sTrackData.substring(1,sTrackData.length);
-      }
+        //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there,
+        //---  there are problems with parsing on the part of credit cards processor - so strip it off
+        if ( sTrackData.substring(0,1) == '%' ) {
+            sTrackData = sTrackData.substring(1,sTrackData.length);
+        }
 
     }
 
     //-----------------------------------------------------------------------------
     //--- No Track Match
     //-----------------------------------------------------------------------------
-    if (((!bTrack1_2) && (!bTrack1) && (!bTrack2)) || (bShowAlert))
-    {
-      //alert('Difficulty Reading Card Information.\n\nPlease Swipe Card Again.');
+    if (((!bTrack1_2) && (!bTrack1) && (!bTrack2)) || (bShowAlert)) {
+      console.log('Difficulty Reading Card Information.\n\nPlease Swipe Card Again.');
     }
 
-//    alert('Track Data: ' + document.formFinal.trackdata.value);
 
     //document.formFinal.trackdata.value = replaceChars(document.formFinal.trackdata.value,';','');
     //document.formFinal.trackdata.value = replaceChars(document.formFinal.trackdata.value,'?','');
 
-//    alert('Track Data: ' + document.formFinal.trackdata.value);
 
-  } //--- end "if ( strParse != '' )"
+    } //--- end "if ( strParse != '' )"
 
 
     this.dump = function(){
