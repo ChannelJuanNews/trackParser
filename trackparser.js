@@ -27,6 +27,12 @@
 
 
 var trackParser = function (strParse){
+
+    if (strParse == "" || strParse == null || strParse == undefined){
+        console.log("There was no track data sent")
+        return this
+    }
+
     // Init members
     this.InputTrackdataStr  = strParse;
     this.AccountName        = "";
@@ -135,7 +141,7 @@ var trackParser = function (strParse){
         if (bTrack1)
         {
             let strCutUpSwipe = "" + strParse + " ";
-            let[] arrayStrSwipe = strCutUpSwipe.Split('^');
+            let arrayStrSwipe = strCutUpSwipe.Split('^');
 
             let sAccountNumber, sName, sShipToName, sMonth, sYear;
 
