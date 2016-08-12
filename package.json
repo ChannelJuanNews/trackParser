@@ -1,0 +1,21 @@
+{
+  "name": "trackparser",
+  "version": "0.0.1",
+  "description": "A tiny library that parses raw a credit card track string. Only works for Track 1 and 2",
+  "main": "trackparser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Credit",
+    "Card",
+    "Track",
+    "Parser",
+    "Track",
+    "1",
+    "Track",
+    "2"
+  ],
+  "author": "Juan G Ruelas Jr",
+  "license": "MIT"
+}
