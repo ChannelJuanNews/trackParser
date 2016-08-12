@@ -59,8 +59,8 @@ var trackParser = function (strParse){
 
     if (strParse != ""){
         //--- Determine the presence of special characters
-        let nHasTrack1 = strParse.IndexOf("^");
-        let nHasTrack2 = strParse.IndexOf("=");
+        let nHasTrack1 = strParse.indexOf("^");
+        let nHasTrack2 = strParse.indexOf("=");
         let bHasTrack1 = false;
         let bHasTrack2 = false;
 
@@ -76,9 +76,9 @@ var trackParser = function (strParse){
         let bTrack2     = false;
 
         //--- Determine tracks present
-        if ((bHasTrack1) && (bHasTrack2)) { bTrack1_2 = true; }
-        if ((bHasTrack1) && (!bHasTrack2)) { bTrack1 = true; }
-        if ((!bHasTrack1) && (bHasTrack2)) { bTrack2 = true; }
+        if ((bHasTrack1)  && (bHasTrack2))  { bTrack1_2 = true; }
+        if ((bHasTrack1)  && (!bHasTrack2)) { bTrack1 = true; }
+        if ((!bHasTrack1) && (bHasTrack2))  { bTrack2 = true; }
 
         //--- Initialize alert message on error
         let bShowAlert = false;
@@ -90,40 +90,36 @@ var trackParser = function (strParse){
         if (bTrack1_2){
 
             let strCutUpSwipe = "" + strParse + " ";
-            let arrayStrSwipe = strCutUpSwipe.plit('^');
+            let arrayStrSwipe = strCutUpSwipe.split('^');
             let sAccountNumber, sName, sShipToName, sMonth, sYear;
 
             if (arrayStrSwipe.length > 2) {
 
-                this.Account = StripAlpha(arrayStrSwipe[0].Substring(1));
+                this.Account = StripAlpha(arrayStrSwipe[0].substring(1));
                 this.AccountName = arrayStrSwipe[1];
-                this.ExpMonth = arrayStrSwipe[2].Substring(2, 2);
-                this.ExpYear = "20" + arrayStrSwipe[2].Substring(0, 2);
+                this.ExpMonth = arrayStrSwipe[2].substring(2, 2);
+                this.ExpYear = "20" + arrayStrSwipe[2].substring(0, 2);
 
                 //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there, there are
                 //---   problems with parsing on the part of credit cards processor - so strip it off
-                if (sTrackData.Substring(0, 1) == "%")
-                {
-                    sTrackData = sTrackData.Substring(1);
+                if (sTrackData.substring(0, 1) == "%") {
+                    sTrackData = sTrackData.substring(1);
                 }
 
-                int track2sentinel = sTrackData.IndexOf(";");
-                if (track2sentinel != -1)
-                {
-                    this.Track1 = sTrackData.Substring(0, track2sentinel);
-                    this.Track2 = sTrackData.Substring(track2sentinel);
+                let track2sentinel = sTrackData.indexOf(";");
+                if (track2sentinel != -1) {
+                    this.Track1 = sTrackData.substring(0, track2sentinel);
+                    this.Track2 = sTrackData.substring(track2sentinel);
                 }
 
                 //--- parse name field into first/last names
-                int nameDelim = this.AccountName.IndexOf("/");
-                if (nameDelim != -1)
-                {
-                    this.LastName = this.AccountName.Substring(0, nameDelim);
-                    this.FirstName = this.AccountName.Substring(nameDelim + 1);
+                let nameDelim = this.AccountName.indexOf("/");
+                if (nameDelim != -1) {
+                    this.LastName = this.AccountName.substring(0, nameDelim);
+                    this.FirstName = this.AccountName.substring(nameDelim + 1);
                 }
             }
-            else  //--- for "if ( arrayStrSwipe.Length > 2 )"
-            {
+            else { //--- for "if ( arrayStrSwipe.Length > 2 )"
                 bShowAlert = true;  //--- Error -- show alert message
             }
         }
@@ -132,39 +128,36 @@ var trackParser = function (strParse){
         //--- Track 1 only cards
         //--- Ex: B1234123412341234^CardUser/John^030510100000019301000000877000000?
         //-----------------------------------------------------------------------------
-        if (bTrack1)
-        {
-            string strCutUpSwipe = "" + strParse + " ";
-            string[] arrayStrSwipe = strCutUpSwipe.Split('^');
+        if (bTrack1) {
+            let strCutUpSwipe = "" + strParse + " ";
+            let arrayStrSwipe = strCutUpSwipe.split('^');
 
-            string sAccountNumber, sName, sShipToName, sMonth, sYear;
+            let sAccountNumber, sName, sShipToName, sMonth, sYear;
 
-            if (arrayStrSwipe.Length > 2)
-            {
-                this.Account = sAccountNumber = StripAlpha(arrayStrSwipe[0].Substring(1));
+            if (arrayStrSwipe.length > 2) {
+                this.Account = sAccountNumber = StripAlpha(arrayStrSwipe[0].substring(1));
                 this.AccountName = sName = arrayStrSwipe[1];
-                this.ExpMonth = sMonth = arrayStrSwipe[2].Substring(2, 2);
-                this.ExpYear = sYear = "20" + arrayStrSwipe[2].Substring(0, 2);
+                this.ExpMonth = sMonth = arrayStrSwipe[2].substring(2, 2);
+                this.ExpYear = sYear = "20" + arrayStrSwipe[2].substring(0, 2);
 
 
                 //--- Different card swipe readers include or exclude the % in
                 //--- the front of the track data - when it's there, there are
                 //---   problems with parsing on the part of credit cards processor - so strip it off
-                if (sTrackData.Substring(0, 1) == "%")
-                {
-                    this.Track1 = sTrackData = sTrackData.Substring(1);
+                if (sTrackData.substring(0, 1) == "%") {
+                    this.Track1 = sTrackData = sTrackData.substring(1);
                 }
 
                 //--- Add track 2 data to the string for processing reasons
-                this.Track2 = ";" + sAccountNumber + "=" + sYear.Substring(2, 2) + sMonth + "111111111111?";
+                this.Track2 = ";" + sAccountNumber + "=" + sYear.substring(2, 2) + sMonth + "111111111111?";
                 sTrackData = sTrackData + this.Track2;
 
                 //--- parse name field into first/last names
-                int nameDelim = this.AccountName.IndexOf("/");
+                int nameDelim = this.AccountName.indexOf("/");
                 if (nameDelim != -1)
                 {
-                    this.LastName = this.AccountName.Substring(0, nameDelim);
-                    this.FirstName = this.AccountName.Substring(nameDelim + 1);
+                    this.LastName = this.AccountName.substring(0, nameDelim);
+                    this.FirstName = this.AccountName.substring(nameDelim + 1);
                 }
 
             }
@@ -180,10 +173,10 @@ var trackParser = function (strParse){
         //-----------------------------------------------------------------------------
         if (bTrack2)
         {
-            int nSeperator = strParse.IndexOf("=");
-            string sCardNumber = strParse.Substring(1, nSeperator - 1);
-            string sYear = strParse.Substring(nSeperator + 1, 2);
-            string sMonth = strParse.Substring(nSeperator + 3, 2);
+            int nSeperator = strParse.indexOf("=");
+            string sCardNumber = strParse.substring(1, nSeperator - 1);
+            string sYear = strParse.substring(nSeperator + 1, 2);
+            string sMonth = strParse.substring(nSeperator + 3, 2);
             string sAccountNumber;
 
             this.Account = sAccountNumber = StripAlpha(sCardNumber);
@@ -192,9 +185,8 @@ var trackParser = function (strParse){
 
             //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there,
             //---  there are problems with parsing on the part of credit cards processor - so strip it off
-            if (sTrackData.Substring(0, 1) == "%")
-            {
-                sTrackData = sTrackData.Substring(1);
+            if (sTrackData.substring(0, 1) == "%") {
+                sTrackData = sTrackData.substring(1);
             }
 
         }
@@ -202,40 +194,37 @@ var trackParser = function (strParse){
         //-----------------------------------------------------------------------------
         //--- No Track Match
         //-----------------------------------------------------------------------------
-        if (((!bTrack1_2) && (!bTrack1) && (!bTrack2)) || (bShowAlert))
-        {
+        if (((!bTrack1_2) && (!bTrack1) && (!bTrack2)) || (bShowAlert)) {
             this.ResultDesc = "Difficulty Reading Card Information.\n\nPlease Click Reset and Swipe Card Again.";
             return false;
         }
-        else
-        {
+        else {
             // discard the starting and ending sentinels
-            if (this.HasTrack1)
-            {
+            if (this.HasTrack1) {
                 // strip end sentinel
-                if (this.Track1.Substring(this.Track1.Length - 1) == "?")
+                if (this.Track1.substring(this.Track1.Length - 1) == "?")
                 {
-                    this.Track1Pure = this.Track1.Substring(0, this.Track1.Length - 1);
+                    this.Track1Pure = this.Track1.substring(0, this.Track1.Length - 1);
                 }
             }
 
             if (this.HasTrack2)
             {
                 // strip start sentinel
-                if (this.Track2.Substring(0, 1) == ";")
+                if (this.Track2.substring(0, 1) == ";")
                 {
-                    this.Track2Pure = this.Track2.Substring(1);
+                    this.Track2Pure = this.Track2.substring(1);
                 }
                 // strip end sentinel
-                if (this.Track2.Substring(this.Track2.Length - 1) == "?")
+                if (this.Track2.substring(this.Track2.Length - 1) == "?")
                 {
                     if (this.Track2Pure != "")
                     {
-                        this.Track2Pure = this.Track2Pure.Substring(0, this.Track2Pure.Length - 1);
+                        this.Track2Pure = this.Track2Pure.substring(0, this.Track2Pure.Length - 1);
                     }
                     else
                     {
-                        this.Track2Pure = this.Track2.Substring(0, this.Track2.Length - 1);
+                        this.Track2Pure = this.Track2.substring(0, this.Track2.Length - 1);
                     }
                 }
             }
@@ -249,6 +238,10 @@ var trackParser = function (strParse){
         this.ResultDesc = "Difficulty Reading Card Information.\n\nPlease Swipe Card Again.";
         return false;
     }
+}
+
+function StripAlpha(str){
+    return str.replace(/\D/g,'')
 }
 
 var newTrack = new trackParser();
