@@ -25,8 +25,7 @@
 
 
 
-
-let trackParser = function(strParse) {
+var trackParser = function(strParse) {
 
     // we error check
     if (strParse == "" || strParse == null || strParse == undefined){
@@ -41,7 +40,7 @@ let trackParser = function(strParse) {
     this.firstName              = null;
     this.acccount               = null;
     this.expMonth              = null;
-    this.expYear               = null;gi
+    this.expYear               = null;
     this.track1                 = null;
     this.track2                 = null;
     this.hasTrack1              = false;
