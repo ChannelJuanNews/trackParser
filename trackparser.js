@@ -153,7 +153,7 @@ var trackParser = function (strParse){
                 sTrackData = sTrackData + this.Track2;
 
                 //--- parse name field into first/last names
-                int nameDelim = this.AccountName.indexOf("/");
+                let nameDelim = this.AccountName.indexOf("/");
                 if (nameDelim != -1)
                 {
                     this.LastName = this.AccountName.substring(0, nameDelim);
@@ -171,13 +171,12 @@ var trackParser = function (strParse){
         //--- Track 2 only cards
         //--- Ex: 1234123412341234=0305101193010877?
         //-----------------------------------------------------------------------------
-        if (bTrack2)
-        {
-            int nSeperator = strParse.indexOf("=");
-            string sCardNumber = strParse.substring(1, nSeperator - 1);
-            string sYear = strParse.substring(nSeperator + 1, 2);
-            string sMonth = strParse.substring(nSeperator + 3, 2);
-            string sAccountNumber;
+        if (bTrack2) {
+            let nSeperator = strParse.indexOf("=");
+            let sCardNumber = strParse.substring(1, nSeperator - 1);
+            let sYear = strParse.substring(nSeperator + 1, 2);
+            let sMonth = strParse.substring(nSeperator + 3, 2);
+            let sAccountNumber;
 
             this.Account = sAccountNumber = StripAlpha(sCardNumber);
             this.ExpMonth = sMonth = sMonth;
@@ -195,35 +194,30 @@ var trackParser = function (strParse){
         //--- No Track Match
         //-----------------------------------------------------------------------------
         if (((!bTrack1_2) && (!bTrack1) && (!bTrack2)) || (bShowAlert)) {
+            console.log("Difficulty Reading Card Information.\n\nPlease Click Reset and Swipe Card Again.")
             this.ResultDesc = "Difficulty Reading Card Information.\n\nPlease Click Reset and Swipe Card Again.";
-            return false;
+            return "Difficulty Reading Card Information.\n\nPlease Click Reset and Swipe Card Again."
         }
         else {
             // discard the starting and ending sentinels
             if (this.HasTrack1) {
                 // strip end sentinel
-                if (this.Track1.substring(this.Track1.Length - 1) == "?")
-                {
+                if (this.Track1.substring(this.Track1.Length - 1) == "?") {
                     this.Track1Pure = this.Track1.substring(0, this.Track1.Length - 1);
                 }
             }
 
-            if (this.HasTrack2)
-            {
+            if (this.HasTrack2) {
                 // strip start sentinel
-                if (this.Track2.substring(0, 1) == ";")
-                {
+                if (this.Track2.substring(0, 1) == ";") {
                     this.Track2Pure = this.Track2.substring(1);
                 }
                 // strip end sentinel
-                if (this.Track2.substring(this.Track2.Length - 1) == "?")
-                {
-                    if (this.Track2Pure != "")
-                    {
+                if (this.Track2.substring(this.Track2.Length - 1) == "?") {
+                    if (this.Track2Pure != "") {
                         this.Track2Pure = this.Track2Pure.substring(0, this.Track2Pure.Length - 1);
                     }
-                    else
-                    {
+                    else {
                         this.Track2Pure = this.Track2.substring(0, this.Track2.Length - 1);
                     }
                 }
@@ -244,7 +238,7 @@ function StripAlpha(str){
     return str.replace(/\D/g,'')
 }
 
-var newTrack = new trackParser();
+var newTrack = new trackParser("asdfasf");
 
 
 
