@@ -22,16 +22,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////
 
-(function ParseParserObj() {
-    var trackData = new trackParser();
-    if( trackData.hasTrack1 ){
-        console.log( trackData.surname, trackData.firstname, trackData.account, trackData.exp_month + "/" + trackData.exp_year)
-    }
-})()
 
-
-
-
+var trackData = new trackParser("");
+if( trackData.hasTrack1 ){
+    console.log( trackData.lastName, trackData.firstName, trackData.account, trackData.expMonth + "/" + trackData.expYear)
+}
 
 
 function trackParser(strParse) {
@@ -45,11 +40,11 @@ function trackParser(strParse) {
     ///////////////////// member variables ////////////////////////
     this.input_trackdata_str    = strParse;
     this.account_name           = null;
-    this.surname                = null;
-    this.firstname              = null;
+    this.lastName                = null;
+    this.firstName              = null;
     this.acccount               = null;
-    this.exp_month              = null;
-    this.exp_year               = null;
+    this.expMonth              = null;
+    this.expYear               = null;
     this.track1                 = null;
     this.track2                 = null;
     this.hasTrack1              = false;
@@ -109,7 +104,7 @@ function trackParser(strParse) {
     //--- Ex: B1234123412341234^CardUser/John^030510100000019301000000877000000?;1234123412341234=0305101193010877?
     //-----------------------------------------------------------------------------
     if (bTrack1_2) {
-        console.log('Track 1 & 2 swipe');
+        //console.log('Track 1 & 2 swipe');
 
         strCutUpSwipe = '' + strParse + ' ';
         arrayStrSwipe = new Array(4);
@@ -120,8 +115,8 @@ function trackParser(strParse) {
         if ( arrayStrSwipe.length > 2 ) {
             this.account        = stripAlpha( arrayStrSwipe[0].substring(1,arrayStrSwipe[0].length) );
             this.account_name   = arrayStrSwipe[1];
-            this.exp_month      = arrayStrSwipe[2].substring(2,4);
-            this.exp_year       = '20' + arrayStrSwipe[2].substring(0,2);
+            this.expMonth      = arrayStrSwipe[2].substring(2,4);
+            this.expYear       = '20' + arrayStrSwipe[2].substring(0,2);
 
             //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there, there are
             //---   problems with parsing on the part of credit cards processor - so strip it off
@@ -137,12 +132,13 @@ function trackParser(strParse) {
             //--- parse name field into first/last names
             var nameDelim = this.account_name.indexOf("/");
             if( nameDelim != -1 ){
-                this.surname = this.account_name.substring(0, nameDelim);
-                this.firstname = this.account_name.substring(nameDelim+1);
+                this.lastName = this.account_name.substring(0, nameDelim);
+                this.firstName = this.account_name.substring(nameDelim+1);
             }
         }
         else { //--- for "if ( arrayStrSwipe.length > 2 )"
-        bShowAlert = true;  //--- Error -- show alert message
+            //console.log('There was an error reading the card')
+            bShowAlert = true;  //--- Error -- show alert message
         }
     }
 
@@ -151,7 +147,7 @@ function trackParser(strParse) {
     //--- Ex: B1234123412341234^CardUser/John^030510100000019301000000877000000?
     //-----------------------------------------------------------------------------
     if (bTrack1) {
-        console.log('Track 1 swipe');
+        //console.log('Track 1 swipe');
 
         strCutUpSwipe = '' + strParse + ' ';
         arrayStrSwipe = new Array(4);
@@ -163,8 +159,8 @@ function trackParser(strParse) {
 
             this.account        = sAccountNumber    = stripAlpha( arrayStrSwipe[0].substring( 1,arrayStrSwipe[0].length) );
             this.account_name   = sName             = arrayStrSwipe[1];
-            this.exp_month      = sMonth            = arrayStrSwipe[2].substring(2,4);
-            this.exp_year       = sYear             = '20' + arrayStrSwipe[2].substring(0,2);
+            this.expMonth      = sMonth            = arrayStrSwipe[2].substring(2,4);
+            this.expYear       = sYear             = '20' + arrayStrSwipe[2].substring(0,2);
 
 
             //--- Different card swipe readers include or exclude the % in
@@ -183,12 +179,13 @@ function trackParser(strParse) {
             //--- parse name field into first/last names
             var nameDelim = this.account_name.indexOf("/");
             if( nameDelim != -1 ){
-                this.surname = this.account_name.substring(0, nameDelim);
-                this.firstname = this.account_name.substring(nameDelim+1);
+                this.lastName = this.account_name.substring(0, nameDelim);
+                this.firstName = this.account_name.substring(nameDelim+1);
             }
 
         }
         else { //--- for "if ( arrayStrSwipe.length > 2 )"
+            //console.log('There was an error reading the card')
             bShowAlert = true;  //--- Error -- show alert message
         }
     }
@@ -198,7 +195,7 @@ function trackParser(strParse) {
     //--- Ex: 1234123412341234=0305101193010877?
     //-----------------------------------------------------------------------------
     if (bTrack2) {
-        console.log('Track 2 swipe');
+        //console.log('Track 2 swipe');
 
         nSeperator  = strParse.indexOf("=");
         sCardNumber = strParse.substring(1,nSeperator);
@@ -208,8 +205,8 @@ function trackParser(strParse) {
         // console.log(sCardNumber + ' -- ' + sMonth + '/' + sYear);
 
         this.account    = sAccountNumber    = stripAlpha(sCardNumber);
-        this.exp_month  = sMonth            = sMonth;
-        this.exp_year   = sYear             = '20' + sYear;
+        this.expMonth  = sMonth            = sMonth;
+        this.expYear   = sYear             = '20' + sYear;
 
         //--- Different card swipe readers include or exclude the % in the front of the track data - when it's there,
         //---  there are problems with parsing on the part of credit cards processor - so strip it off
@@ -238,11 +235,11 @@ function trackParser(strParse) {
         var s = "";
         var sep = "\r"; // line separator
         s += "Name: " + this.account_name + sep;
-        s += "Surname: " + this.surname + sep;
-        s += "first name: " + this.firstname + sep;
+        s += "lastName: " + this.lastName + sep;
+        s += "first name: " + this.firstName + sep;
         s += "account: " + this.account + sep;
-        s += "exp_month: " + this.exp_month + sep;
-        s += "exp_year: " + this.exp_year + sep;
+        s += "expMonth: " + this.expMonth + sep;
+        s += "expYear: " + this.expYear + sep;
         s += "has track1: " + this.hasTrack1 + sep;
         s += "has track2: " + this.hasTrack2 + sep;
         s += "TRACK 1: " + this.track1 + sep;
