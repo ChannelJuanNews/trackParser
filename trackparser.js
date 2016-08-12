@@ -1,26 +1,29 @@
 // /////////////////////////////////////////////////////////////////////////////////
 // JavaScript Magstripe (track 1, track2) data parser object
 //
-// Mar-22-2005    Modified by Wayne Walrath,
-//                Acme Technologies http://www.acmetech.com
-//            based on demo source code from www.skipjack.com
+// Mar-22-2005      Modified by Wayne Walrath,
+//                  Acme Technologies http://www.acmetech.com
+//                  based on demo source code from www.skipjack.com
 //
-// USAGE:
-// var p = new SwipeParserObj();
-// p.dump();  -- returns parsed field values and meta info.
-//    -- or --
-// get individual field names (see member variables at top of object)
+// Aug-12-2016      Modified by Juan G Ruelas Jr,
+//                  Ruelas Industries
+//                  Published to npm under username ChannelJuanNews
+//                  Found on github under https://github.com/channeljuannews/trackParser
+//                  Other uses can be found on www.ruelas.me/trackparser
 //
-// if( p.hasTrack1 ){
-//        p.surname;
-//        p.firstname;
-//        p.account;
-//        p.exp_month + "/" + p.exp_year;
-//    }
+//  ** NEW USAGE **
+//
+//  var trackData = new trackParser(/*Raw String Here*/)
+//  trackData.firstName
+//  trackData.lastName
+//  trackData.account
+//  trackData.expMonth
+//  trackdata.expYear
+//
 ///////////////////////////////////////////////////////////////////////////////////
 
-function ParseParserObj() {
-    var p = new SwipeParserObj( document.getElementById('hdnSwipeData').value );
+(function ParseParserObj() {
+    var p = new SwipeParserObj();
     if( p.hasTrack1 ){
         p.account_name;
         p.surname;
@@ -29,25 +32,28 @@ function ParseParserObj() {
         p.exp_month + "/" + p.exp_year;
     }
 
-    alert("account_name: " + p.account_name + "\nsurname: " + p.surname + "\nfirstname: " + p.firstname + "\naccount: " + p.account+ "\nexpiration: " + p.exp_month + "/" + p.exp_year);
-}
+    console.log("account_name: " + p.account_name + "\nsurname: " + p.surname + "\nfirstname: " + p.firstname + "\naccount: " + p.account+ "\nexpiration: " + p.exp_month + "/" + p.exp_year);
+})()
 
 
-function SwipeParserObj(strParse)
-{
-    ///////////////////////////////////////////////////////////////
+
+
+
+
+function trackParser(strParse) {
+
     ///////////////////// member variables ////////////////////////
-    this.input_trackdata_str = strParse;
-    this.account_name = null;
-    this.surname = null;
-    this.firstname = null;
-    this.acccount = null;
-    this.exp_month = null;
-    this.exp_year = null;
-    this.track1 = null;
-    this.track2 = null;
-    this.hasTrack1 = false;
-    this.hasTrack2 = false;
+    this.input_trackdata_str    = strParse;
+    this.account_name           = null;
+    this.surname                = null;
+    this.firstname              = null;
+    this.acccount               = null;
+    this.exp_month              = null;
+    this.exp_year               = null;
+    this.track1                 = null;
+    this.track2                 = null;
+    this.hasTrack1              = false;
+    this.hasTrack2              = false;
     /////////////////////////// end member fields /////////////////
 
 
@@ -65,8 +71,7 @@ function SwipeParserObj(strParse)
   //-- 1234123412341234=0305101193010877?
   //-- Key off of the presence of "=" but not "^"
 
-  if ( strParse != '' )
-  {
+  if ( strParse != '' ) {
     // alert(strParse);
 
     //--- Determine the presence of special characters
