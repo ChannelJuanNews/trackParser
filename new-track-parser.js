@@ -13,6 +13,7 @@ var trackParser = function(rawtrack ,callback) {
 
     // do stuffs
 
+
     callback(cardinfo)
 }
 
@@ -30,6 +31,7 @@ var trackParserSync = function(rawtrack){
     }
 
     // do stuffs
+
 
 
 
