@@ -14,7 +14,7 @@ Currently it is only available through npm or right here on github
 
 ```javascript
 
-const trackParser 		= require('trackparser').trackParser
+const trackParser 	= require('trackparser').trackParser
 const trackParserSync 	= require('trackparser').trackParserSync
 
 // method for parsing a credit card
