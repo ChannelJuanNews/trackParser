@@ -11,6 +11,12 @@
 //                  Found on github under https://github.com/channeljuannews/trackParser
 //                  Other uses can be found on www.ruelas.me/trackparser
 //
+// Oct-28-2020      Modified By Juan G Ruelas Jr, 
+//                  AZ Technological Laboratories, Inc 
+//                  Published to npm under username ChannelJuanNews
+//                  Found on github under https://github.com/channeljuannews/trackParser
+//                  Other uses can be found on www.ruelas.me/trackparser
+//
 //  ** NEW USAGE **
 //
 //  var trackData = new trackParser(/*Raw String Here*/)
